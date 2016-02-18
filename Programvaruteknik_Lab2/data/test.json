@@ -1,0 +1,134 @@
+{
+    "credit": {
+        "message": "Provided by Everysport.com",
+        "link": "http://www.everysport.com",
+        "logoUrl": "http://c.static.es-cdn.net/files/everysport2/images/icons/event/small/everysport.png"
+    },
+    "metadata": {
+        "limit": 2,
+        "count": 2,
+        "totalCount": 240,
+        "offset": 0
+    },
+    "events": [{
+            "id": 2324212,
+            "links": [{
+                    "rel": "self",
+                    "href": "http://api.everysport.com/v1/events/2324212"
+                }],
+            "startDate": "2014-03-30T15:00+0200",
+            "round": 1,
+            "status": "FINISHED",
+            "homeTeam": {
+                "id": 19721,
+                "name": "IF Brommapojkarna",
+                "shortName": "Brommapojkarna",
+                "link": "http://www.everysport.com/sport/fotboll/team/if-brommapojkarna/19721",
+                "municipality": {
+                    "id": 180,
+                    "name": "Stockholm"
+                }
+            },
+            "visitingTeam": {
+                "id": 9374,
+                "name": "Kalmar FF",
+                "shortName": "Kalmar FF",
+                "link": "http://www.everysport.com/sport/fotboll/team/kalmar-ff/9374",
+                "municipality": {
+                    "id": 880,
+                    "name": "Kalmar"
+                }
+            },
+            "homeTeamScore": 1,
+            "visitingTeamScore": 2,
+            "finishedTimeStatus": "ORDINARY_TIME",
+            "league": {
+                "id": 63925,
+                "links": [{
+                        "rel": "self",
+                        "href": "http://api.everysport.com/v1/leagues/63925"
+                    }],
+                "name": "Allsvenskan",
+                "level": "Allsvenskan",
+                "sport": {
+                    "id": 10,
+                    "links": [{
+                            "rel": "self",
+                            "href": "http://api.everysport.com/v1/sports/10"
+                        }],
+                    "name": "Fotboll"
+                },
+                "teamClass": "MEN",
+                "startDate": "2014-03-30T00:00+0100",
+                "endDate": "2014-11-01T00:00+0100",
+                "liveScore": false
+            },
+            "facts": {
+                "arena": {
+                    "id": 110295,
+                    "name": "Grimsta IP 1"
+                },
+                "spectators": 2028
+            }
+        }, {
+            "id": 2324213,
+            "links": [{
+                    "rel": "self",
+                    "href": "http://api.everysport.com/v1/events/2324213"
+                }],
+            "startDate": "2014-03-30T15:00+0200",
+            "round": 1,
+            "status": "FINISHED",
+            "homeTeam": {
+                "id": 9389,
+                "name": "Mjällby AIF",
+                "shortName": "Mjällby",
+                "link": "http://www.everysport.com/sport/fotboll/team/mjaellby-aif/9389",
+                "municipality": {
+                    "id": 1083,
+                    "name": "Sölvesborg"
+                }
+            },
+            "visitingTeam": {
+                "id": 9400,
+                "name": "Gefle IF",
+                "shortName": "Gefle",
+                "link": "http://www.everysport.com/sport/fotboll/team/gefle-if/9400",
+                "municipality": {
+                    "id": 2180,
+                    "name": "Gävle"
+                }
+            },
+            "homeTeamScore": 2,
+            "visitingTeamScore": 2,
+            "finishedTimeStatus": "ORDINARY_TIME",
+            "league": {
+                "id": 63925,
+                "links": [{
+                        "rel": "self",
+                        "href": "http://api.everysport.com/v1/leagues/63925"
+                    }],
+                "name": "Allsvenskan",
+                "level": "Allsvenskan",
+                "sport": {
+                    "id": 10,
+                    "links": [{
+                            "rel": "self",
+                            "href": "http://api.everysport.com/v1/sports/10"
+                        }],
+                    "name": "Fotboll"
+                },
+                "teamClass": "MEN",
+                "startDate": "2014-03-30T00:00+0100",
+                "endDate": "2014-11-01T00:00+0100",
+                "liveScore": false
+            },
+            "facts": {
+                "arena": {
+                    "id": 61382,
+                    "name": "Strandvallen"
+                },
+                "spectators": 3532
+            }
+        }]
+}
