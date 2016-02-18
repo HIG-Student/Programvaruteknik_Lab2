@@ -28,4 +28,22 @@ public interface DataSource
      * @return The data
      */
     public Map<LocalDate, Double> getData();
+
+    /**
+     * Represent an error related to the datasource
+     */
+    @SuppressWarnings("serial")
+    public class DataSourceException extends Exception
+    {
+	/**
+	 * Create an exception
+	 * 
+	 * @param exception
+	 *            The source exception
+	 */
+	public DataSourceException(Exception exception)
+	{
+	    super(exception);
+	}
+    }
 }
