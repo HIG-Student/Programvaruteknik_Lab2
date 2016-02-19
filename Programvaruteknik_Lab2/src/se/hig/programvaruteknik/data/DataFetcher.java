@@ -1,15 +1,17 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.data;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 
 /**
- * Fetches data from a HTTP site
+ * Fetches data from source
  */
-public class HTTPFetcher
+public class DataFetcher
 {
     /**
      * Fetches data from an URL
@@ -18,7 +20,7 @@ public class HTTPFetcher
      *            the address to the website
      * @return The data
      */
-    public static String fetchData(String url)
+    public static String fetchDataFromURL(String url)
     {
 	try
 	{
@@ -41,6 +43,25 @@ public class HTTPFetcher
 	    }
 	}
 	catch (MalformedURLException ex)
+	{
+	    throw new RuntimeException(ex);
+	}
+    }
+
+    /**
+     * Fetches data from an URL
+     * 
+     * @param path
+     *            the path to the file
+     * @return The data
+     */
+    public static String fetchDataFromFile(String path)
+    {
+	try
+	{
+	    return String.join("\n\r", Files.readAllLines(new File(path).toPath()));
+	}
+	catch (IOException ex)
 	{
 	    throw new RuntimeException(ex);
 	}

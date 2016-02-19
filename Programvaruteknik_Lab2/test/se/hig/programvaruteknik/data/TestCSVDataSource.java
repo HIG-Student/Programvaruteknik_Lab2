@@ -1,4 +1,4 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.data;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.Map;
 
 import org.junit.Test;
+
+import se.hig.programvaruteknik.data.CSVDataSource;
 
 @SuppressWarnings("javadoc")
 public class TestCSVDataSource

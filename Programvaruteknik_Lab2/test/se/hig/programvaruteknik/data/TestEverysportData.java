@@ -1,26 +1,30 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.data;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import se.hig.programvaruteknik.DataSource.DataSourceException;
+import se.hig.programvaruteknik.data.FootballGoalSource;
+import se.hig.programvaruteknik.model.DataCollection;
+import se.hig.programvaruteknik.model.DataCollectionBuilder;
+import se.hig.programvaruteknik.model.DataSource;
+import se.hig.programvaruteknik.model.MatchedDataPair;
+import se.hig.programvaruteknik.model.Resolution;
+import se.hig.programvaruteknik.model.DataSource.DataSourceException;
 
 @SuppressWarnings("javadoc")
 public class TestEverysportData
 {
     public DataSource getWeatherData()
     {
-	return new UnmodifiableDataSource()
+	return new DataSource()
 	{
 	    @Override
 	    public String getUnit()
@@ -36,24 +40,21 @@ public class TestEverysportData
 
 	    @SuppressWarnings("serial")
 	    @Override
-	    protected Map<LocalDate, Double> getRawData()
+	    public Map<LocalDate, Double> getData()
 	    {
-		return new HashMap<LocalDate, Double>()
+		return Collections.unmodifiableMap(new HashMap<LocalDate, Double>()
 		{
 		    {
 			put(LocalDate.of(2014, 3, 30), 5d);
 		    }
-		};
+		});
 	    }
 	};
     }
 
-    public DataSource getFootballData() throws DataSourceException, IOException
+    public DataSource getFootballData() throws DataSourceException
     {
-	return FootballGoalSource.fromJSON(
-		"Football data",
-		Files.readAllLines(new File("data/test.json").toPath()).stream().collect(Collectors.joining()),
-		true);
+	return new FootballGoalSource("Football data", true, new File("data/test.json"));
     }
 
     @Test

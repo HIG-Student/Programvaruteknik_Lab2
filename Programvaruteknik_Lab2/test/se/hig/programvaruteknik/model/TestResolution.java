@@ -1,4 +1,4 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.model;
 
 import static org.junit.Assert.assertEquals;
 

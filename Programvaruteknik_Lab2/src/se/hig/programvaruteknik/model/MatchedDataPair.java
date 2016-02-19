@@ -1,4 +1,4 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.model;
 
 /**
  * A class representing two data values that makes a pair

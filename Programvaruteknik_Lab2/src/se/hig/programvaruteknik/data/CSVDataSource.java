@@ -1,4 +1,4 @@
-package se.hig.programvaruteknik;
+package se.hig.programvaruteknik.data;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,10 +7,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import se.hig.programvaruteknik.model.DataSource;
+
 /**
  * A {@link DataSource} that can be serializable
  */
-public class CSVDataSource extends UnmodifiableDataSource
+public class CSVDataSource implements DataSource
 {
     private Map<LocalDate, Double> data;
     private String name;
@@ -72,14 +74,9 @@ public class CSVDataSource extends UnmodifiableDataSource
 	return unit;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @return {@link Collections#unmodifiableMap Unmodifiable} Map
-     */
     @Override
-    public Map<LocalDate, Double> getRawData()
+    public Map<LocalDate, Double> getData()
     {
-	return data;
+	return Collections.unmodifiableMap(data);
     }
 }
