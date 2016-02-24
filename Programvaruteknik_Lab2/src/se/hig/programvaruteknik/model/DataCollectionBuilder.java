@@ -105,16 +105,17 @@ public class DataCollectionBuilder
 	return this;
     }
 
+    static List<String> collectKeys(DataSource source, Resolution resolution)
+    {
+	return source.getData().keySet().stream().map(resolution::toKey).distinct().collect(Collectors.toList());
+    }
+
     static Map<String, MatchedDataPair> matchData(DataSource xSource, MergeType xMergeType, DataSource ySource, MergeType yMergeType, Resolution resolution)
     {
-	List<String> commonKeys = xSource
-		.getData()
-		.keySet()
-		.stream()
-		.filter((key) -> ySource.getData().containsKey(key))
-		.map(resolution::toKey)
-		.distinct()
-		.collect(Collectors.toList());
+	List<String> xKeys = collectKeys(xSource, resolution);
+	List<String> yKeys = collectKeys(ySource, resolution);
+
+	List<String> commonKeys = xKeys.stream().filter((key) -> yKeys.contains(key)).collect(Collectors.toList());
 
 	Function<DataSource, Map<String, List<Double>>> dataOrganizer = (source) -> source
 		.getData()
