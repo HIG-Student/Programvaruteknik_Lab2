@@ -19,9 +19,9 @@ import se.hig.programvaruteknik.model.MergeType;
 import se.hig.programvaruteknik.model.Resolution;
 
 /**
- * Builds rain sources
+ * Builds temperature sources
  */
-public class RainSourceBuilder
+public class TemperatureSourceBuilder
 {
     /**
      * Specifies a period to get data from
@@ -83,7 +83,7 @@ public class RainSourceBuilder
      *            The location to get data from
      */
     @SuppressWarnings("unchecked")
-    public RainSourceBuilder(RainSourceLocation location)
+    public TemperatureSourceBuilder(TemperatureSourceLocation location)
     {
 	for (Map<String, Object> period : (List<Map<String, Object>>) new Genson()
 		.deserialize(DataSupplierFactory.createURLFetcher(location.url).get(), Map.class)
@@ -109,11 +109,11 @@ public class RainSourceBuilder
      * @param period
      *            The period to get from
      * @return The data
-     * @throws RainSourceBuilderException
+     * @throws TemperatureSourceBuilderException
      *             If errors occur
      */
     @SuppressWarnings("unchecked")
-    public DataSource getData(Period period) throws RainSourceBuilderException
+    public DataSource getData(Period period) throws TemperatureSourceBuilderException
     {
 	try
 	{
@@ -138,7 +138,7 @@ public class RainSourceBuilder
 	}
 	catch (Exception e)
 	{
-	    throw new RainSourceBuilderException(e);
+	    throw new TemperatureSourceBuilderException(e);
 	}
     }
 
@@ -170,7 +170,7 @@ public class RainSourceBuilder
      * Indicates errors when building a rain source
      */
     @SuppressWarnings("serial")
-    public class RainSourceBuilderException extends DataSourceException
+    public class TemperatureSourceBuilderException extends DataSourceException
     {
 	/**
 	 * Create exception
@@ -178,7 +178,7 @@ public class RainSourceBuilder
 	 * @param exception
 	 *            The exception that resulted in this exception
 	 */
-	public RainSourceBuilderException(Exception exception)
+	public TemperatureSourceBuilderException(Exception exception)
 	{
 	    super(exception);
 	}
@@ -191,7 +191,7 @@ public class RainSourceBuilder
 			"Football Goals",
 			FootballSource.TOTAL_GOALS_EXTRACTOR,
 			new File("test/se/hig/programvaruteknik/data/TestEverysportData.json")),
-		new RainSourceBuilder(RainSourceLocation.GÄVLE_A).getData(Period.OLD),
+		new TemperatureSourceBuilder(TemperatureSourceLocation.GÄVLE_A).getData(Period.OLD),
 		Resolution.MONTH);
 
 	builder.setYMergeType(MergeType.AVERAGE);

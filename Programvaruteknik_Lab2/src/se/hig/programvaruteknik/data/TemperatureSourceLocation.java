@@ -4,7 +4,7 @@ package se.hig.programvaruteknik.data;
  * The location to get rain data from
  */
 @SuppressWarnings("javadoc")
-public enum RainSourceLocation
+public enum TemperatureSourceLocation
 {
     ABISKO("http://opendata-download-metobs.smhi.se/api/version/latest/parameter/2/station/188800.json"),
 
@@ -1576,7 +1576,7 @@ public enum RainSourceLocation
 
     public final String url;
 
-    RainSourceLocation(String url)
+    TemperatureSourceLocation(String url)
     {
 	this.url = url;
     }
