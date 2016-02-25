@@ -1,15 +1,18 @@
 package se.hig.programvaruteknik.data;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.junit.Test;
 
-import se.hig.programvaruteknik.data.CSVDataSource;
+import se.hig.programvaruteknik.data.CSVDataSource_Old;
 
 @SuppressWarnings("javadoc")
 public class TestCSVDataSource
@@ -18,9 +21,14 @@ public class TestCSVDataSource
     public void testCreate()
     {
 	File csv = new File("data/smhi-gavle-regn-1954-2015.csv");
-	assumeTrue(csv.exists());
-	
-	CSVDataSource smhi = new CSVDataSource(csv.getPath());
+	assertTrue("Can't find file!", csv.exists());
+
+	// CSVDataSource(DataSupplierFactory.createFileFetcher("data/smhi-gavle-regn-1954-2015.csv"),
+	// Function<String, String> nameExtractor, Function<String, String>
+	// unitExtractor, Function<String, List<String>> rowExtractor,
+	// BiConsumer<String, BiConsumer<LocalDate, Double>> dataExtractor)
+
+	CSVDataSource_Old smhi = new CSVDataSource_Old(csv.getPath());
 	assertEquals("Incorrect name", "Regn i Gävle", smhi.getName());
 	assertEquals("Incorrect Unit", "mm", smhi.getUnit());
 	Map<LocalDate, Double> data = smhi.getData();

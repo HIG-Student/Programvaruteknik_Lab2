@@ -1,64 +1,62 @@
 package se.hig.programvaruteknik.data;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import se.hig.programvaruteknik.model.DataSource;
 
 /**
- * A {@link DataSource} that can be serializable
+ * A source of CSV data
  */
 public class CSVDataSource implements DataSource
 {
-    private Map<LocalDate, Double> data;
     private String name;
     private String unit;
+    private Map<LocalDate, Double> data = new TreeMap<>();
 
     /**
-     * @param name
-     *            The name of the data source
-     * @param unit
-     *            The unit of the data
-     * @param filePath
-     *            The file to read<br />
-     *            The first line is considered a comment<br />
-     *            The second line is "{collection name};{unit name}", the rest
-     *            should be:
-     *            <br />
-     *            date;double[;whatever]<br />
-     *            Where the data after the double is ignored
-     * @throws RuntimeException
-     *             If error occurs
+     * Splits the source based on line-breaks (regex '\R')
      */
-    public CSVDataSource(String filePath)
+    public static Function<String, List<String>> DEFAULT_ROWEXTRACTOR = (source) -> Arrays.asList(source.split("\\R"));
+
+    /**
+     * Adds the value to the map
+     */
+    private final BiConsumer<LocalDate, Double> ADDER = (date, value) -> data.put(date, value);
+
+    /**
+     * CSV data source
+     * 
+     * @param sourceSupplier
+     *            Suplier for the source
+     * @param nameExtractor
+     *            Extractor that extract the name from the source
+     * @param unitExtractor
+     *            Extractor that extract the unit from the source
+     * @param rowExtractor
+     *            Extractor that extract the rows from the source (see
+     *            {@link CSVDataSource#DEFAULT_ROWEXTRACTOR})
+     * @param dataExtractor
+     *            Extractor that extract the data from the row, and can add it
+     *            with the adder
+     */
+    public CSVDataSource(Supplier<String> sourceSupplier, Function<String, String> nameExtractor, Function<String, String> unitExtractor, Function<String, List<String>> rowExtractor, BiConsumer<String, BiConsumer<LocalDate, Double>> dataExtractor)
     {
-	data = new HashMap<>();
+	String source = sourceSupplier.get();
 
-	try (BufferedReader reader = new BufferedReader(new FileReader(filePath)))
+	name = nameExtractor.apply(source);
+	unit = unitExtractor.apply(source);
+
+	for (String row : rowExtractor.apply(source))
 	{
-	    reader.readLine();
-
-	    String line = reader.readLine();
-	    String[] info = line.split(";");
-
-	    name = info[0];
-	    unit = info[1];
-
-	    while ((line = reader.readLine()) != null)
-	    {
-		String[] collumn = line.split(";");
-		LocalDate date = LocalDate.parse(collumn[0]);
-		Double value = Double.parseDouble(collumn[1]);
-		data.put(date, value);
-	    }
-	}
-	catch (Exception e)
-	{
-	    throw new RuntimeException(e);
+	    dataExtractor.accept(row, ADDER);
 	}
     }
 
