@@ -2,7 +2,6 @@ package se.hig.programvaruteknik.data;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
@@ -10,39 +9,35 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import se.hig.programvaruteknik.data.FootballSource;
+import se.hig.programvaruteknik.data.FootballSourceBuilder;
+import se.hig.programvaruteknik.model.DataSource;
 import se.hig.programvaruteknik.model.DataSource.DataSourceException;
 
 @SuppressWarnings("javadoc")
 public class TestEverysportData
 {
-    private FootballSource footballSource;
+    private FootballSourceBuilder footballSource;
 
     @Before
     public void setUp() throws DataSourceException
     {
-	footballSource = new FootballSource(
-		"Football data",
-		FootballSource.TOTAL_GOALS_EXTRACTOR,
-		new File("test/se/hig/programvaruteknik/data/TestEverysportData.json"));
-    }
-
-    @Test
-    public void testName() throws DataSourceException, IOException
-    {
-	assertEquals("Football data", footballSource.getName());
-    }
-
-    @Test
-    public void testUnit() throws DataSourceException, IOException
-    {
-	assertEquals("Goals", footballSource.getUnit());
+	footballSource = new FootballSourceBuilder();
+	footballSource.setSourceSupplier(
+		DataSupplierFactory.createFileFetcher("test/se/hig/programvaruteknik/data/TestEverysportData.json"));
+	footballSource.setName("Football data");
+	footballSource.setUnit("Goals");
+	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
     }
 
     @Test
     public void testData() throws DataSourceException, IOException
     {
-	Map<LocalDate, Double> data = footballSource.getData();
+	DataSource dataSource = footballSource.build();
+
+	assertEquals("Football data", dataSource.getName());
+	assertEquals("Goals", dataSource.getUnit());
+
+	Map<LocalDate, Double> data = dataSource.getData();
 
 	assertEquals(new Double(30), new Double(data.size()));
 

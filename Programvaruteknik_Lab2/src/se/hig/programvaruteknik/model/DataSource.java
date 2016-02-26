@@ -45,5 +45,16 @@ public interface DataSource
 	{
 	    super(exception);
 	}
+
+	/**
+	 * Create an exception
+	 * 
+	 * @param exception
+	 *            The reason
+	 */
+	public DataSourceException(String exception)
+	{
+	    super(exception);
+	}
     }
 }
