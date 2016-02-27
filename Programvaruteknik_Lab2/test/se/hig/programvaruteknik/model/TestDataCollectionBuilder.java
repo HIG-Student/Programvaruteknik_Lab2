@@ -159,6 +159,30 @@ public class TestDataCollectionBuilder
     }
 
     @Test
+    public void testSimpleResolutionMapping()
+    {
+	@SuppressWarnings("serial")
+	DataSource sourceA = getDataSource("A", "A", new HashMap<LocalDate, Double>()
+	{
+	    {
+		put(LocalDate.of(2016, 02, 23), 5d);
+	    }
+	});
+
+	@SuppressWarnings("serial")
+	DataSource sourceB = getDataSource("B", "B", new HashMap<LocalDate, Double>()
+	{
+	    {
+		put(LocalDate.of(2016, 02, 27), 5d);
+	    }
+	});
+
+	DataCollectionBuilder builder = new DataCollectionBuilder(sourceA, sourceB, Resolution.WEEK);
+	Map<String, MatchedDataPair> data = builder.getResult().getData();
+	assertEquals(1, data.size());
+    }
+
+    @Test
     public void testDay_SUM()
     {
 	testCollection(Resolution.DAY, MergeType.SUM, (date, x, y) ->

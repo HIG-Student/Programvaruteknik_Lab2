@@ -18,7 +18,9 @@ public class DataCollectionBuilder
     private DataSource xData;
     private DataSource yData;
     private Resolution resolution;
-    private Map<String, MatchedDataPair> cachedResult = null;
+
+    private CachedValue<Map<String, MatchedDataPair>> resultingData = new CachedValue<>(
+	    () -> matchData(xData, xMergeType, yData, yMergeType, resolution));
 
     /**
      * Creation of a builder that builds a {@link DataCollection}
@@ -59,7 +61,7 @@ public class DataCollectionBuilder
      */
     public DataCollectionBuilder setResolution(Resolution resolution)
     {
-	if (!this.resolution.equals(resolution)) cachedResult = null;
+	if (!this.resolution.equals(resolution)) resultingData.clearCache();
 
 	this.resolution = resolution;
 	return this;
@@ -84,7 +86,7 @@ public class DataCollectionBuilder
      */
     public DataCollectionBuilder setXMergeType(MergeType xMergeType)
     {
-	if (!this.xMergeType.equals(xMergeType)) cachedResult = null;
+	if (!this.xMergeType.equals(xMergeType)) resultingData.clearCache();
 
 	this.xMergeType = xMergeType;
 	return this;
@@ -99,7 +101,7 @@ public class DataCollectionBuilder
      */
     public DataCollectionBuilder setYMergeType(MergeType yMergeType)
     {
-	if (!this.yMergeType.equals(yMergeType)) cachedResult = null;
+	if (!this.yMergeType.equals(yMergeType)) resultingData.clearCache();
 
 	this.yMergeType = yMergeType;
 	return this;
@@ -140,15 +142,6 @@ public class DataCollectionBuilder
 	return matches;
     }
 
-    private Map<String, MatchedDataPair> getFromCache()
-    {
-	if (cachedResult == null)
-	{
-	    cachedResult = matchData(xData, xMergeType, yData, yMergeType, resolution);
-	}
-	return cachedResult;
-    }
-
     /**
      * Build the {@link DataCollection}
      * 
@@ -156,6 +149,6 @@ public class DataCollectionBuilder
      */
     public DataCollection getResult()
     {
-	return new DataCollection(getTitle(), xData.getUnit(), yData.getUnit(), getFromCache());
+	return new DataCollection(getTitle(), xData.getUnit(), yData.getUnit(), resultingData.get());
     }
 }
