@@ -3,6 +3,8 @@ package se.hig.programvaruteknik.data;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -82,6 +84,8 @@ public class FootballSourceBuilder extends JSONDataSourceBuilder
      */
     public FootballSourceBuilder setFetchFromWebsite(String apikey, String parameters)
     {
+	if (parameters == null || parameters == "") parameters = "league=63925";
+
 	setSourceSupplier(
 		DataSupplierFactory.createURLFetcher(
 			String.format("http://api.everysport.com/v1/events?apikey=%s&%s", apikey, parameters)));
@@ -106,6 +110,18 @@ public class FootballSourceBuilder extends JSONDataSourceBuilder
     public FootballSourceBuilder setFetchFromWebsite(String parameters)
     {
 	return setFetchFromWebsite("1769e0fdbeabd60f479b1dcaff03bf5c", parameters);
+    }
+
+    /**
+     * Sets the {@link FootballSourceBuilder#setSourceSupplier(Supplier)
+     * supplier} to one that fetch data from the
+     * <a href="www.everysport.com">Everysport website</a>
+     * 
+     * @return This builder
+     */
+    public FootballSourceBuilder setFetchFromWebsite()
+    {
+	return setFetchFromWebsite("1769e0fdbeabd60f479b1dcaff03bf5c", "");
     }
 
     /**

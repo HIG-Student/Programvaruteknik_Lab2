@@ -9,25 +9,27 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import se.hig.programvaruteknik.data.TemperatureSourceBuilder.Period;
+import se.hig.programvaruteknik.data.SMHISourceBuilder.DataType;
+import se.hig.programvaruteknik.data.SMHISourceBuilder.Period;
 import se.hig.programvaruteknik.model.DataSource;
 import se.hig.programvaruteknik.model.DataSource.DataSourceException;
 
 @SuppressWarnings("javadoc")
 public class TestSMHIData
 {
-    private static TemperatureSourceBuilder temperatureBuilder;
+    private static SMHISourceBuilder temperatureBuilder;
 
     @BeforeClass
     public static void init() throws DataSourceException
     {
-	TemperatureSourceLocation location = TemperatureSourceLocation.GÄVLE_A;
+	SMHILocation location = SMHILocation.GÄVLE_A;
+	SMHISourceBuilder.DataType dataType = DataType.TEMPERATURE;
 
-	temperatureBuilder = new TemperatureSourceBuilder((url) ->
+	temperatureBuilder = new SMHISourceBuilder((url) ->
 	{
-	    assertEquals("Can't fetch url form enum", url, location.url);
+	    assertEquals("Can't fetch url form enum", url, String.format(location.url, dataType.parameter));
 	    return DataSupplierFactory.createFileFetcher("test/se/hig/programvaruteknik/data/TestSMHIData1.json").get();
-	} , location);
+	} , dataType, location);
 
 	temperatureBuilder.setPeriod((url) ->
 	{
@@ -63,5 +65,13 @@ public class TestSMHIData
 
 	assertEquals(new Double(4.3), data.get(LocalDate.of(2015, 10, 30)));
 	assertEquals(new Double(8.0), data.get(LocalDate.of(2015, 10, 31)));
+    }
+
+    public static void main(String[] args)
+    {
+	SMHISourceBuilder builder = new SMHISourceBuilder(DataType.RAIN, SMHILocation.GÄVLE_A);
+	builder.setPeriod(Period.OLD);
+	builder.setDataFilter((date, value) -> value <= 0);
+	DataSource data = builder.build();
     }
 }

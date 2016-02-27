@@ -87,6 +87,10 @@ public abstract class DataSourceBuilder
 		{
 		    Map<LocalDate, Double> generatedData = generateData();
 		    if (generatedData == null) throw new DataSourceBuilderException("Missing data");
+		    if (!DataSourceBuilder.this.name
+			    .canGiveValue()) throw new DataSourceBuilderException("Missing name");
+		    if (!DataSourceBuilder.this.unit
+			    .canGiveValue()) throw new DataSourceBuilderException("Missing unit");
 
 		    name = DataSourceBuilder.this.name.get();
 		    unit = DataSourceBuilder.this.unit.get();
