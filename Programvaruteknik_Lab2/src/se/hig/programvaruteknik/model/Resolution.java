@@ -101,6 +101,7 @@ public enum Resolution
 	return toKey(entry.getKey());
     }
 
+    @FunctionalInterface
     private interface ResolutionResolver
     {
 	public String resolve(LocalDate date);
