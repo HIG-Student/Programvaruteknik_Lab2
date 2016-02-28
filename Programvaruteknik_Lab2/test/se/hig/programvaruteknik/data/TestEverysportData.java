@@ -23,7 +23,7 @@ public class TestEverysportData
     {
 	footballSource = new FootballSourceBuilder();
 	footballSource.setSourceSupplier(
-		DataSupplierFactory.createFileFetcher("test/se/hig/programvaruteknik/data/TestEverysportData.json"));
+		DataSupplierFactory.createFileFetcher("data/test/TestEverysportData.json"));
 	footballSource.setName("Football data");
 	footballSource.setUnit("Goals");
 	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);

@@ -28,7 +28,7 @@ public class TestSMHIData
 	temperatureBuilder = new SMHISourceBuilder((url) ->
 	{
 	    assertEquals("Can't fetch url form enum", url, String.format(location.url, dataType.parameter));
-	    return DataSupplierFactory.createFileFetcher("test/se/hig/programvaruteknik/data/TestSMHIData1.json").get();
+	    return DataSupplierFactory.createFileFetcher("data/test/TestSMHIData1.json").get();
 	} , dataType, location);
 
 	temperatureBuilder.setPeriod((url) ->
@@ -37,11 +37,11 @@ public class TestSMHIData
 	    {
 	    case "http://opendata-download-metobs.smhi.se/api/version/latest/parameter/2/station/107420/period/corrected-archive.json":
 		return DataSupplierFactory
-			.createFileFetcher("test/se/hig/programvaruteknik/data/TestSMHIData2.json")
+			.createFileFetcher("data/test/TestSMHIData2.json")
 			.get();
 	    case "http://opendata-download-metobs.smhi.se/api/version/latest/parameter/2/station/107420/period/corrected-archive/data.csv":
 		return DataSupplierFactory
-			.createFileFetcher("test/se/hig/programvaruteknik/data/TestSMHIData3.csv")
+			.createFileFetcher("data/test/TestSMHIData3.csv")
 			.get();
 	    default:
 		fail("'setPeriod' calls unknown url!");
