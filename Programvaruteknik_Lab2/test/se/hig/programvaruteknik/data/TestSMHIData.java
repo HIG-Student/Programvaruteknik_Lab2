@@ -66,12 +66,4 @@ public class TestSMHIData
 	assertEquals(new Double(4.3), data.get(LocalDate.of(2015, 10, 30)));
 	assertEquals(new Double(8.0), data.get(LocalDate.of(2015, 10, 31)));
     }
-
-    public static void main(String[] args)
-    {
-	SMHISourceBuilder builder = new SMHISourceBuilder(DataType.RAIN, SMHILocation.GÄVLE_A);
-	builder.setPeriod(Period.OLD);
-	builder.setDataFilter((date, value) -> value <= 0);
-	DataSource data = builder.build();
-    }
 }

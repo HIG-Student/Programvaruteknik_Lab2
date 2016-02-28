@@ -3,8 +3,6 @@ package se.hig.programvaruteknik.data;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
