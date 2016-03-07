@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import se.hig.programvaruteknik.data.FootballSourceBuilder;
@@ -16,22 +16,14 @@ import se.hig.programvaruteknik.model.DataSource.DataSourceException;
 @SuppressWarnings("javadoc")
 public class TestEverysportData
 {
-    private FootballSourceBuilder footballSource;
-
-    @Before
-    public void setUp() throws DataSourceException
-    {
-	footballSource = new FootballSourceBuilder();
-	footballSource.setSourceSupplier(
-		DataSupplierFactory.createFileFetcher("data/test/TestEverysportData.json"));
-	footballSource.setName("Football data");
-	footballSource.setUnit("Goals");
-	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
-    }
-
     @Test
     public void testData() throws DataSourceException, IOException
     {
+	FootballSourceBuilder footballSource = new FootballSourceBuilder();
+	footballSource.setSourceSupplier(DataSupplierFactory.createFileFetcher("data/test/TestEverysportData.json"));
+	footballSource.setName("Football data");
+	footballSource.setUnit("Goals");
+	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
 	DataSource dataSource = footballSource.build();
 
 	assertEquals("Football data", dataSource.getName());
@@ -71,5 +63,30 @@ public class TestEverysportData
 	assertEquals(new Double(1 + 2), data.get(LocalDate.of(2014, 10, 19)));
 	assertEquals(new Double(3 + 1), data.get(LocalDate.of(2014, 10, 25)));
 	assertEquals(new Double(2 + 1), data.get(LocalDate.of(2014, 11, 1)));
+    }
+
+    // @Ignore("Missing data?")
+    @Test
+    public void testFull()
+    {
+	FootballSourceBuilder footballSource = new FootballSourceBuilder();
+	footballSource
+		.setSourceSupplier(DataSupplierFactory.createFileFetcher("data/test/TestEverysportData_Full.json"));
+	footballSource.setName("Football data");
+	footballSource.setUnit("Goals");
+	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
+	footballSource.setEntryFilter((obj) ->
+	{
+	    System.out.println("!");
+	    return false;
+	});
+	DataSource dataSource = footballSource.build();
+
+	assertEquals("Football data", dataSource.getName());
+	assertEquals("Goals", dataSource.getUnit());
+
+	Map<LocalDate, Double> data = dataSource.getData();
+
+	assertEquals(new Double(240), new Double(data.size()));
     }
 }

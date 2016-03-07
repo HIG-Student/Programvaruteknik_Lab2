@@ -231,11 +231,16 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
 
 	Map<LocalDate, Double> result = new TreeMap<>();
 
-	BiConsumer<LocalDate, Double> adder = (date, value) -> result.put(date, value);
+	BiConsumer<LocalDate, Double> adder = (date, value) ->
+	{
+	    if(result.put(date, value) != null)
+		System.out.println("Double!");
+	};
 
 	for (Map<String, Object> map : list.get())
 	{
 	    if (entryFilter == null || !entryFilter.apply(map)) dataExtractor.accept(map, adder);
+	    // TODO: handle duplicated keys?
 	}
 
 	return result;

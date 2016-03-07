@@ -82,7 +82,7 @@ public class FootballSourceBuilder extends JSONDataSourceBuilder
      */
     public FootballSourceBuilder setFetchFromWebsite(String apikey, String parameters)
     {
-	if (parameters == null || parameters == "") parameters = "league=63925";
+	if (parameters == null || parameters == "") parameters = "league=63925&limit=240";
 
 	setSourceSupplier(
 		DataSupplierFactory.createURLFetcher(
