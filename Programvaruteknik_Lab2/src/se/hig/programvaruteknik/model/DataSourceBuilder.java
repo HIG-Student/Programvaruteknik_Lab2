@@ -2,6 +2,7 @@ package se.hig.programvaruteknik.model;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
@@ -14,6 +15,15 @@ import java.util.TreeMap;
 public abstract class DataSourceBuilder
 {
     private BiFunction<LocalDate, Double, Boolean> dataFilter;
+    private BiFunction<LocalDate, List<Double>, Double> dataReducer = REDUCER_SUM;
+
+    /**
+     * Reduces conflicting keys by summing them
+     */
+    public static final BiFunction<LocalDate, List<Double>, Double> REDUCER_SUM = (key, list) -> list
+	    .stream()
+	    .reduce(Double::sum)
+	    .get();
 
     /**
      * The name of the datasource
@@ -30,6 +40,21 @@ public abstract class DataSourceBuilder
     public DataSourceBuilder setDataFilter(BiFunction<LocalDate, Double, Boolean> dataFilter)
     {
 	this.dataFilter = dataFilter;
+	return this;
+    }
+
+    /**
+     * Sets the data reducer<br>
+     * <br>
+     * Reduces data with same key to a single value
+     * 
+     * @param dataReducer
+     *            The data reducer
+     * @return This builder
+     */
+    public DataSourceBuilder setDataReducer(BiFunction<LocalDate, List<Double>, Double> dataReducer)
+    {
+	this.dataReducer = dataReducer;
 	return this;
     }
 
@@ -64,7 +89,7 @@ public abstract class DataSourceBuilder
 	return this;
     }
 
-    protected abstract Map<LocalDate, Double> generateData();
+    protected abstract Map<LocalDate, List<Double>> generateData();
 
     /**
      * Builds the data source
@@ -85,22 +110,24 @@ public abstract class DataSourceBuilder
 	    {
 		try
 		{
-		    Map<LocalDate, Double> generatedData = generateData();
+		    Map<LocalDate, List<Double>> generatedData = generateData();
 		    if (generatedData == null) throw new DataSourceBuilderException("Missing data");
 		    if (!DataSourceBuilder.this.name
 			    .canGiveValue()) throw new DataSourceBuilderException("Missing name");
 		    if (!DataSourceBuilder.this.unit
 			    .canGiveValue()) throw new DataSourceBuilderException("Missing unit");
+		    if (dataReducer == null) throw new DataSourceBuilderException("Missing reducer");
 
 		    name = DataSourceBuilder.this.name.get();
 		    unit = DataSourceBuilder.this.unit.get();
 
 		    Map<LocalDate, Double> rawData = new TreeMap<>();
-		    for (Entry<LocalDate, Double> entry : generatedData.entrySet())
+		    for (Entry<LocalDate, List<Double>> entry : generatedData.entrySet())
 		    {
-			if (dataFilter == null || !dataFilter.apply(entry.getKey(), entry.getValue()))
+			Double value = dataReducer.apply(entry.getKey(), entry.getValue());
+			if (dataFilter == null || !dataFilter.apply(entry.getKey(), value))
 			{
-			    rawData.put(entry.getKey(), entry.getValue());
+			    rawData.put(entry.getKey(), value);
 			}
 		    }
 

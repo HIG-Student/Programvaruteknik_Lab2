@@ -1,6 +1,7 @@
 package se.hig.programvaruteknik.data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,7 +27,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
 	return new Genson().deserialize(source.get(), Map.class);
     });
     private CachedValue<List<Map<String, Object>>> list = new CachedValue<>();
-    private CachedValue<Map<LocalDate, Double>> data = new CachedValue<>();
+    private CachedValue<Map<LocalDate, List<Double>>> data = new CachedValue<>();
 
     private Function<Map<String, Object>, Boolean> entryFilter;
     private BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor;
@@ -221,7 +222,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
     }
 
     @Override
-    protected Map<LocalDate, Double> generateData()
+    protected Map<LocalDate, List<Double>> generateData()
     {
 	if (data.canGiveValue()) return data.get();
 
@@ -229,18 +230,17 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
 	if (!list.canGiveValue()) throw new DataSourceBuilderException("Missing list extractor!");
 	if (dataExtractor == null) throw new DataSourceBuilderException("Missing data extractor!");
 
-	Map<LocalDate, Double> result = new TreeMap<>();
+	Map<LocalDate, List<Double>> result = new TreeMap<>();
 
 	BiConsumer<LocalDate, Double> adder = (date, value) ->
 	{
-	    if(result.put(date, value) != null)
-		System.out.println("Double!");
+	    result.putIfAbsent(date, new ArrayList<Double>());
+	    result.get(date).add(value);
 	};
 
 	for (Map<String, Object> map : list.get())
 	{
 	    if (entryFilter == null || !entryFilter.apply(map)) dataExtractor.accept(map, adder);
-	    // TODO: handle duplicated keys?
 	}
 
 	return result;

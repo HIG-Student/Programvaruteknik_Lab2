@@ -62,6 +62,7 @@ public class CachedValue<T>
     public void updateSupplier(Supplier<T> supplier)
     {
 	this.supplier = supplier;
+	clearCache();
     }
 
     /**

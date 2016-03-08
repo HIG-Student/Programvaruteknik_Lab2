@@ -3,8 +3,12 @@ package se.hig.programvaruteknik.model;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -13,6 +17,25 @@ import se.hig.programvaruteknik.model.DataSourceBuilder.DataSourceBuilderExcepti
 @SuppressWarnings("javadoc")
 public class TestDataSourceBuilder
 {
+    @SuppressWarnings(
+    {
+	    "serial",
+	    "unchecked",
+	    "rawtypes"
+    })
+    private Map<LocalDate, List<Double>> inflatedMap(Map<LocalDate, Double> map)
+    {
+	return map.entrySet().stream().collect(
+		Collectors.<Entry<LocalDate, Double>, LocalDate, List<Double>> toMap(
+			(key) -> key.getKey(),
+			(value) -> new ArrayList()
+			{
+			    {
+				add(value.getValue());
+			    }
+			}));
+    }
+
     @Test(expected = DataSourceBuilderException.class)
     public void testMissingName()
     {
@@ -23,7 +46,7 @@ public class TestDataSourceBuilder
 	    }
 
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
 		return new TreeMap<>();
 	    }
@@ -40,7 +63,7 @@ public class TestDataSourceBuilder
 	    }
 
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
 		return new TreeMap<>();
 	    }
@@ -53,7 +76,7 @@ public class TestDataSourceBuilder
 	new DataSourceBuilder()
 	{
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
 		return new TreeMap<>();
 	    }
@@ -71,7 +94,7 @@ public class TestDataSourceBuilder
 	    }
 
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
 		return null;
 	    }
@@ -96,9 +119,9 @@ public class TestDataSourceBuilder
 	    }
 
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
-		return data;
+		return inflatedMap(data);
 	    }
 	}.build();
 
@@ -127,9 +150,9 @@ public class TestDataSourceBuilder
 	    }
 
 	    @Override
-	    protected Map<LocalDate, Double> generateData()
+	    protected Map<LocalDate, List<Double>> generateData()
 	    {
-		return inputData;
+		return inflatedMap(inputData);
 	    }
 	}.build();
 

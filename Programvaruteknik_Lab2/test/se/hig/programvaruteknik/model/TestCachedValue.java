@@ -77,7 +77,7 @@ public class TestCachedValue
 	testObject.set("Yolo");
 	assertTrue(testObject.canGiveValue());
 	testObject.updateSupplier(null);
-	assertTrue(testObject.canGiveValue());
+	assertFalse(testObject.canGiveValue());
 	testObject.setActive(false);
 	assertFalse(testObject.canGiveValue());
 	testObject.updateSupplier(() -> "Yo");
@@ -95,16 +95,15 @@ public class TestCachedValue
     }
 
     @Test
-    public void testIgnoredSupplier()
+    public void testUpdateSupplier()
     {
 	CachedValue<String> testObject = new CachedValue<>();
 	testObject.set("Yo");
 	testObject.updateSupplier(() ->
 	{
-	    fail("Not cached!");
-	    return null;
+	    return "ok";
 	});
-	testObject.get();
+	assertEquals("ok", testObject.get());
     }
 
     @Test
