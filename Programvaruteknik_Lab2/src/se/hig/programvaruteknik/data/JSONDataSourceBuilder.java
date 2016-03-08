@@ -20,17 +20,40 @@ import se.hig.programvaruteknik.model.DataSourceBuilder;
  */
 public class JSONDataSourceBuilder extends DataSourceBuilder
 {
-    private CachedValue<String> source = new CachedValue<>();
-    @SuppressWarnings("unchecked")
-    private CachedValue<Map<String, Object>> root = new CachedValue<>(() ->
-    {
-	return new Genson().deserialize(source.get(), Map.class);
-    });
-    private CachedValue<List<Map<String, Object>>> list = new CachedValue<>();
-    private CachedValue<Map<LocalDate, List<Double>>> data = new CachedValue<>();
-
-    private Function<Map<String, Object>, Boolean> entryFilter;
+    private Function<Map<String, Object>, List<Map<String, Object>>> listExtractor;
     private BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor;
+    private Function<Map<String, Object>, Boolean> entryFilter;
+
+    private CachedValue<String> source = new CachedValue<>();
+
+    @SuppressWarnings("unchecked")
+    private Supplier<Map<String, Object>> DEFAULT_ROOT_SUPPLIER = () -> new Genson()
+	    .deserialize(source.get(), Map.class);
+
+    private CachedValue<Map<String, Object>> root = new CachedValue<>(DEFAULT_ROOT_SUPPLIER);
+
+    private CachedValue<List<Map<String, Object>>> list = new CachedValue<>(() ->
+    {
+	return listExtractor.apply(root.get());
+    });
+
+    private CachedValue<Map<LocalDate, List<Double>>> data = new CachedValue<>(() ->
+    {
+	Map<LocalDate, List<Double>> result = new TreeMap<>();
+
+	BiConsumer<LocalDate, Double> adder = (date, value) ->
+	{
+	    result.putIfAbsent(date, new ArrayList<Double>());
+	    result.get(date).add(value);
+	};
+
+	for (Map<String, Object> map : list.get())
+	{
+	    if (entryFilter == null || !entryFilter.apply(map)) dataExtractor.accept(map, adder);
+	}
+
+	return result;
+    });
 
     /**
      * Creates a datasource builder<br>
@@ -87,10 +110,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
     public JSONDataSourceBuilder(Supplier<String> sourceSupplier, Function<Map<String, Object>, String> nameExtractor, Function<Map<String, Object>, String> unitExtractor, Function<Map<String, Object>, List<Map<String, Object>>> listExtractor, BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor)
     {
 	setSourceSupplier(sourceSupplier);
-	setNameExtractor(nameExtractor);
-	setUnitExtractor(unitExtractor);
-	setListExtractor(listExtractor);
-	setDataExtractor(dataExtractor);
+	setExtractors(nameExtractor, unitExtractor, listExtractor, dataExtractor);
     }
 
     /**
@@ -110,7 +130,11 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
     public JSONDataSourceBuilder(Map<String, Object> root, Function<Map<String, Object>, String> nameExtractor, Function<Map<String, Object>, String> unitExtractor, Function<Map<String, Object>, List<Map<String, Object>>> listExtractor, BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor)
     {
 	this.root.updateSupplier(() -> root);
+	setExtractors(nameExtractor, unitExtractor, listExtractor, dataExtractor);
+    }
 
+    private void setExtractors(Function<Map<String, Object>, String> nameExtractor, Function<Map<String, Object>, String> unitExtractor, Function<Map<String, Object>, List<Map<String, Object>>> listExtractor, BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor)
+    {
 	setNameExtractor(nameExtractor);
 	setUnitExtractor(unitExtractor);
 	setListExtractor(listExtractor);
@@ -136,20 +160,6 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
     }
 
     /**
-     * Sets the list-extractor to use
-     * 
-     * @param listExtractor
-     *            The list-extractor
-     * @return This builder
-     */
-    public JSONDataSourceBuilder setListExtractor(Function<Map<String, Object>, List<Map<String, Object>>> listExtractor)
-    {
-	list.updateSupplier(() -> listExtractor.apply(root.get()));
-	data.clearCache();
-	return this;
-    }
-
-    /**
      * Sets the source supplier
      * 
      * @param sourceSupplier
@@ -158,12 +168,29 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
      */
     public JSONDataSourceBuilder setSourceSupplier(Supplier<String> sourceSupplier)
     {
+	if (sourceSupplier == null) throw new DataSourceBuilderException("Missing source supplier!");
 	source.updateSupplier(sourceSupplier);
-	root.clearCache();
+	root.updateSupplier(DEFAULT_ROOT_SUPPLIER);
 	list.clearCache();
 	data.clearCache();
 	name.clearCache();
 	unit.clearCache();
+	return this;
+    }
+
+    /**
+     * Sets the list-extractor to use
+     * 
+     * @param listExtractor
+     *            The list-extractor
+     * @return This builder
+     */
+    public JSONDataSourceBuilder setListExtractor(Function<Map<String, Object>, List<Map<String, Object>>> listExtractor)
+    {
+	if (listExtractor == null) throw new DataSourceBuilderException("Missing list extractor!");
+	this.listExtractor = listExtractor;
+	list.clearCache();
+	data.clearCache();
 	return this;
     }
 
@@ -176,6 +203,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
      */
     public JSONDataSourceBuilder setNameExtractor(Function<Map<String, Object>, String> nameExtractor)
     {
+	if (nameExtractor == null) throw new DataSourceBuilderException("Missing name extractor!");
 	name.updateSupplier(() -> nameExtractor.apply(root.get()));
 	return this;
     }
@@ -189,6 +217,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
      */
     public JSONDataSourceBuilder setUnitExtractor(Function<Map<String, Object>, String> unitExtractor)
     {
+	if (unitExtractor == null) throw new DataSourceBuilderException("Missing unit extractor!");
 	unit.updateSupplier(() -> unitExtractor.apply(root.get()));
 	return this;
     }
@@ -216,6 +245,7 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
      */
     public JSONDataSourceBuilder setDataExtractor(BiConsumer<Map<String, Object>, BiConsumer<LocalDate, Double>> dataExtractor)
     {
+	if (dataExtractor == null) throw new DataSourceBuilderException("Missing data extractor!");
 	this.dataExtractor = dataExtractor;
 	data.clearCache();
 	return this;
@@ -224,25 +254,11 @@ public class JSONDataSourceBuilder extends DataSourceBuilder
     @Override
     protected Map<LocalDate, List<Double>> generateData()
     {
-	if (data.canGiveValue()) return data.get();
+	if (data.haveValue() && data.isActive()) return data.get();
 
-	if (!source.canGiveValue()) throw new DataSourceBuilderException("Missing source supplier!");
-	if (!list.canGiveValue()) throw new DataSourceBuilderException("Missing list extractor!");
+	if (listExtractor == null) throw new DataSourceBuilderException("Missing list extractor!");
 	if (dataExtractor == null) throw new DataSourceBuilderException("Missing data extractor!");
 
-	Map<LocalDate, List<Double>> result = new TreeMap<>();
-
-	BiConsumer<LocalDate, Double> adder = (date, value) ->
-	{
-	    result.putIfAbsent(date, new ArrayList<Double>());
-	    result.get(date).add(value);
-	};
-
-	for (Map<String, Object> map : list.get())
-	{
-	    if (entryFilter == null || !entryFilter.apply(map)) dataExtractor.accept(map, adder);
-	}
-
-	return result;
+	return data.get();
     }
 }

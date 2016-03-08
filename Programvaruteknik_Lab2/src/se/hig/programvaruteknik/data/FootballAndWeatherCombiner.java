@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import se.hig.programvaruteknik.data.SMHISourceBuilder.Period;
@@ -39,9 +40,9 @@ public class FootballAndWeatherCombiner
      * 
      * @return The built data
      */
-    public List<MatchedDataPair> build()
+    public Map<String, List<MatchedDataPair>> build()
     {
-	List<MatchedDataPair> result = new ArrayList<>();
+	Map<String, List<MatchedDataPair>> result = new TreeMap<>();
 
 	FootballSourceBuilder footballBuilder = new FootballSourceBuilder();
 	footballBuilder.setFetchFromWebsite();
@@ -49,32 +50,44 @@ public class FootballAndWeatherCombiner
 	footballBuilder.setUnit("Goals");
 	footballBuilder.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
 
-	for (SMHILocation location : arenaToLocationMapper.values())
+	Map<SMHILocation, DataSource> weatherCache = new TreeMap<>();
+
+	for (Entry<String, SMHILocation> mapping : arenaToLocationMapper.entrySet())
 	{
-	    SMHISourceBuilder weatherBuilder = new SMHISourceBuilder(SMHISourceBuilder.DataType.TEMPERATURE, location);
-	    weatherBuilder.setPeriod(Period.OLD);
+	    if (!weatherCache.containsKey(mapping.getValue()))
+	    {
+		SMHISourceBuilder weatherBuilder = new SMHISourceBuilder(
+			SMHISourceBuilder.DataType.TEMPERATURE,
+			mapping.getValue());
+		weatherBuilder.setPeriod(Period.OLD);
+		weatherCache.put(mapping.getValue(), weatherBuilder.build());
+	    }
 
 	    footballBuilder.setEntryFilter((entry) ->
 	    {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> arena = (Map<String, Object>) ((Map<String, Object>) entry.get("facts"))
 			.get("arena");
-		return (arena == null || !arenaToLocationMapper
-			.containsKey(arena.get("id").toString()) || arenaToLocationMapper
-				.get(arena.get("id").toString()) != location);
+
+		if (arena == null) return true;
+		if (!arena.get("id").toString().equals(mapping.getKey())) return true;
+		return false;
 	    });
 
-	    DataSource weather = weatherBuilder.build();
+	    DataSource weather = weatherCache.get(mapping.getValue());
 	    DataSource goals = footballBuilder.build();
 
 	    DataCollectionBuilder builder = new DataCollectionBuilder(goals, weather, Resolution.DAY);
 	    builder.setXMergeType(MergeType.SUM);
 	    builder.setYMergeType(MergeType.AVERAGE);
-	    Collection<MatchedDataPair> pairs = builder.getResult().getData().values();
-	    result.addAll(pairs);
+	    for (Entry<String, MatchedDataPair> entry : builder.getResult().getData().entrySet())
+	    {
+		result.putIfAbsent(entry.getKey(), new ArrayList<>());
+		result.get(entry.getKey()).add(entry.getValue());
+	    }
 	}
 
-	return Collections.unmodifiableList(result);
+	return Collections.unmodifiableMap(result);
     }
 
     /**
@@ -109,14 +122,17 @@ public class FootballAndWeatherCombiner
 
 	FootballAndWeatherCombiner combiner = new FootballAndWeatherCombiner();
 	combiner.setArenaToLocationMapper(locationMapping);
-	List<MatchedDataPair> pairs = combiner.build();
+	Map<String, List<MatchedDataPair>> pairs = combiner.build();
 
 	System.out.println("Goals made at temperatures");
-	System.out.println("(Goals : Temperature)");
 	System.out.println("");
-	for (MatchedDataPair pair : pairs)
+	for (Entry<String, List<MatchedDataPair>> entry : pairs.entrySet())
 	{
-	    System.out.println(pair);
+	    System.out.println(entry.getKey());
+	    for (MatchedDataPair pair : entry.getValue())
+	    {
+		System.out.println("\t" + pair.toString());
+	    }
 	}
     }
 }
