@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import se.hig.programvaruteknik.data.FootballSourceBuilder;
