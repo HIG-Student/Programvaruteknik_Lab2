@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Supplier;
@@ -98,9 +99,10 @@ public class DataSupplierFactory
      */
     public static Supplier<String> createURLFetcher(String url)
     {
+	File cache = null;
 	try
 	{
-	    File cache = Paths.get("data", "http_cache", URLEncoder.encode(url, "UTF-8")).toFile();
+	    cache = Paths.get("data", "http_cache", URLEncoder.encode(url, "UTF-8")).toFile();
 	    if (!cache.exists())
 	    {
 		String content = createURLFetcher(url, false).get();
@@ -111,7 +113,15 @@ public class DataSupplierFactory
 	}
 	catch (Exception exception)
 	{
-	    throw new RuntimeException(exception);
+	    if (cache != null && exception instanceof NoSuchFileException)
+	    {
+		System.err.println("Cannot write/get cache!\n\t" + cache.getAbsolutePath());
+	    }
+	    else
+	    {
+		System.err.println("Cannot write/get cache!\n\t" + exception.getMessage());
+	    }
+	    return createURLFetcher(url, false);
 	}
     };
 }
