@@ -173,8 +173,8 @@ public abstract class DataSourceBuilder
 		    name = DataSourceBuilder.this.name.get();
 		    unit = DataSourceBuilder.this.unit.get();
 
-		    sourceName = getSourceName();
-		    sourceLink = getSourceLink();
+		    sourceName = DataSourceBuilder.this.getSourceName();
+		    sourceLink = DataSourceBuilder.this.getSourceLink();
 
 		    Map<LocalDate, Double> rawData = new TreeMap<>();
 		    for (Entry<LocalDate, List<Double>> entry : generatedData.entrySet())
@@ -182,7 +182,7 @@ public abstract class DataSourceBuilder
 			Double value = dataReducer.apply(entry.getKey(), entry.getValue());
 			if (dataFilter == null || !dataFilter.apply(entry.getKey(), value))
 			{
-			    System.out.println(rawData.put(entry.getKey(), value));
+			    rawData.put(entry.getKey(), value);
 			}
 		    }
 
