@@ -107,6 +107,9 @@ public class TestDataSourceBuilder
 	String testName = "TestName";
 	String testUnit = "TestUnit";
 
+	String testSourceName = "TestSourceName";
+	String testSourceLink = "TestSourceLink";
+
 	Map<LocalDate, Double> data = new TreeMap<>();
 	data.put(LocalDate.of(2016, 2, 27), 10d);
 	data.put(LocalDate.of(2016, 2, 28), 10d);
@@ -116,6 +119,9 @@ public class TestDataSourceBuilder
 	    {
 		setName(testName);
 		setUnit(testUnit);
+
+		setSourceName(testSourceName);
+		setSourceLink(testSourceLink);
 	    }
 
 	    @Override
@@ -127,6 +133,10 @@ public class TestDataSourceBuilder
 
 	assertEquals(testName, source.getName());
 	assertEquals(testUnit, source.getUnit());
+
+	assertEquals(testSourceName, source.getSourceName());
+	assertEquals(testSourceLink, source.getSourceLink());
+
 	assertEquals(data, source.getData());
     }
 
