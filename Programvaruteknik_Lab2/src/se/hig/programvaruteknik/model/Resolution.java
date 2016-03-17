@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 /**
  * How to group data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public enum Resolution
 {

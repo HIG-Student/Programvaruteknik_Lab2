@@ -16,6 +16,8 @@ import se.hig.programvaruteknik.model.DataSourceBuilder;
  * DataFilter}<br>
  * <br>
  * Generates the value "4" for all days between 1970-01-01 to 2016-02-29
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class ConstantSourceBuilder extends DataSourceBuilder
 {

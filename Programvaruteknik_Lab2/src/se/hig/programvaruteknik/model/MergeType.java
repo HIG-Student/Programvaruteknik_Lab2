@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 /**
  * Lambda that defines how to merge {@link MatchedDataPair MatchedDataPairs}
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 @FunctionalInterface
 public interface MergeType

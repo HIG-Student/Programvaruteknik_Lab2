@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
  * A builder for {@link DataCollection}s<br>
  * <br>
  * Merge types defaults to {@link MergeType#SUM}
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class DataCollectionBuilder
 {

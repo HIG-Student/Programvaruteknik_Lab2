@@ -4,6 +4,8 @@ import java.util.Map;
 
 /**
  * A collection of data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class DataCollection
 {

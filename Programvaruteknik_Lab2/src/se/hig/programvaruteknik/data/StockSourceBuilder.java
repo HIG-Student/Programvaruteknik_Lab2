@@ -12,6 +12,8 @@ import static se.hig.programvaruteknik.Utils.*;
 /**
  * Builds sources from
  * <a href="http://www.kibot.com/api/historical_data_api_sdk.aspx">kibot</a>
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class StockSourceBuilder extends CSVDataSourceBuilder
 {

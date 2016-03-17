@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 /**
  * Building football data from
  * <a href="http://www.everysport.com">Everysport</a>
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class FootballSourceBuilder extends JSONDataSourceBuilder
 {

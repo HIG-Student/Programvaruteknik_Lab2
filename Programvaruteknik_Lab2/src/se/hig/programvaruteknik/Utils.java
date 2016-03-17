@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 
 /**
  * Clever utilities
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class Utils
 {

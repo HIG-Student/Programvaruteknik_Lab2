@@ -2,6 +2,8 @@ package se.hig.programvaruteknik.model;
 
 /**
  * A class representing two data values that makes a pair
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class MatchedDataPair
 {

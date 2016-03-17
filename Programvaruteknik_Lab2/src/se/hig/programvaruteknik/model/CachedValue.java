@@ -9,6 +9,8 @@ import java.util.function.Supplier;
  * 
  * @param <T>
  *            The type of the value to cache
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class CachedValue<T>
 {

@@ -12,6 +12,8 @@ import com.owlike.genson.Genson;
 
 /**
  * Builds temperature sources
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class SMHISourceBuilder extends CSVDataSourceBuilder
 {

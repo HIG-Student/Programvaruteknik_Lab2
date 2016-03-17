@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 /**
  * Generic builder of datasources
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public abstract class DataSourceBuilder
 {

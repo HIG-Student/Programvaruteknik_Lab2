@@ -17,6 +17,8 @@ import se.hig.programvaruteknik.model.DataSourceBuilder;
 
 /**
  * A source of JSON data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class JSONDataSourceBuilder extends DataSourceBuilder
 {

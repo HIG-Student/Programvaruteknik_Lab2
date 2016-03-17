@@ -2,6 +2,8 @@ package se.hig.programvaruteknik.data;
 
 /**
  * The location to get data from
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 @SuppressWarnings("javadoc")
 public enum SMHILocation

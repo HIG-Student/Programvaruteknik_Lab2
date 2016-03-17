@@ -5,6 +5,8 @@ import java.util.Map;
 
 /**
  * Interface representing an source of data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public interface DataSource
 {

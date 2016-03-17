@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 /**
  * Produces {@link Supplier Supplier&lt;String&gt;} for data sources
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class DataSupplierFactory
 {

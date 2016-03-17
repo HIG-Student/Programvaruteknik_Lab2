@@ -17,6 +17,8 @@ import se.hig.programvaruteknik.model.Resolution;
 
 /**
  * Class that combine football and weather data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class FootballAndWeatherCombiner
 {
@@ -59,7 +61,7 @@ public class FootballAndWeatherCombiner
 		weatherBuilder.setPeriod(Period.OLD);
 		weatherCache.put(mapping.getValue(), weatherBuilder.build());
 	    }
-	    
+
 	    footballBuilder.setEntryFilter((entry) ->
 	    {
 		Map<String, Object> arena = (Map<String, Object>) ((Map<String, Object>) entry.get("facts"))

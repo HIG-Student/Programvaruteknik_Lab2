@@ -16,6 +16,8 @@ import se.hig.programvaruteknik.model.DataSourceBuilder;
 
 /**
  * A source of CSV data
+ * 
+ * @author Viktor Hanstorp (ndi14vhp@student.hig.se)
  */
 public class CSVDataSourceBuilder extends DataSourceBuilder
 {
