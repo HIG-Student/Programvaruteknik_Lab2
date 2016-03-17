@@ -60,6 +60,9 @@ public class FootballSourceBuilder extends JSONDataSourceBuilder
     @SuppressWarnings("unchecked")
     public FootballSourceBuilder()
     {
+	setSourceName("Everysport");
+	setSourceLink("http://www.everysport.com");
+
 	setListExtractor((root) -> (List<Map<String, Object>>) root.get("events"));
     }
 

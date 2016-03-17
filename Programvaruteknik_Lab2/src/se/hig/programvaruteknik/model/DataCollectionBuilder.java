@@ -1,7 +1,9 @@
 package se.hig.programvaruteknik.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -142,6 +144,11 @@ public class DataCollectionBuilder
 	return matches;
     }
 
+    private Map<String, MatchedDataPair> copyMap(Map<String, MatchedDataPair> source)
+    {
+	return source.entrySet().stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+
     /**
      * Build the {@link DataCollection}
      * 
@@ -149,6 +156,6 @@ public class DataCollectionBuilder
      */
     public DataCollection getResult()
     {
-	return new DataCollection(getTitle(), xData.getUnit(), yData.getUnit(), resultingData.get());
+	return new DataCollection(getTitle(), xData, yData, copyMap(resultingData.get()));
     }
 }

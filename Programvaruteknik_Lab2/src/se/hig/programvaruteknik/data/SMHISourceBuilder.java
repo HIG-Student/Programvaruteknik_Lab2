@@ -104,6 +104,9 @@ public class SMHISourceBuilder extends CSVDataSourceBuilder
     @SuppressWarnings("unchecked")
     public SMHISourceBuilder(Function<String, String> dataFetcher, DataType dataType, SMHILocation location)
     {
+	setSourceName("SMHI");
+	setSourceLink("http://www.smhi.se");
+
 	try
 	{
 	    for (Map<String, Object> period : (List<Map<String, Object>>) new Genson()
@@ -129,17 +132,14 @@ public class SMHISourceBuilder extends CSVDataSourceBuilder
 	    {
 		String[] rows = source.split("\\R+");
 		for (int i = 0; i < 20; i++)
-		    if (rows[i].startsWith(
-			    "Från Datum Tid (UTC);Till Datum Tid (UTC);Representativt dygn;")) return Arrays
+		    if (rows[i]
+			    .startsWith("Från Datum Tid (UTC);Till Datum Tid (UTC);Representativt dygn;")) return Arrays
 				    .asList(Arrays.copyOfRange(source.split("\\R+"), i + 1, rows.length));
 		throw new DataSourceBuilderException("Incorrect data format!");
 	    });
 	    setDataExtractor(dataType.data_extractor);
 	}
-	catch (
-
-	Exception exception)
-
+	catch (Exception exception)
 	{
 	    throw (DataSourceBuilderException) (exception instanceof DataSourceBuilderException ? exception : new DataSourceBuilderException(
 		    exception));

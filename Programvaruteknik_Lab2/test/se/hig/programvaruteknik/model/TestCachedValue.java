@@ -106,9 +106,8 @@ public class TestCachedValue
 	assertEquals("ok", testObject.get());
     }
 
-    @Test
-    public void test()
+    class TestValue
     {
-	// TODO: more tests
+	public String value;
     }
 }

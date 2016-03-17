@@ -23,6 +23,26 @@ public interface DataSource
     public String getUnit();
 
     /**
+     * Get the name of the source or null
+     * 
+     * @return The name
+     */
+    public default String getSourceName()
+    {
+	return null;
+    }
+
+    /**
+     * Get the link of the source or null
+     * 
+     * @return The unit
+     */
+    public default String getSourceLink()
+    {
+	return null;
+    }
+
+    /**
      * Get the data in the data source
      * 
      * @return The data

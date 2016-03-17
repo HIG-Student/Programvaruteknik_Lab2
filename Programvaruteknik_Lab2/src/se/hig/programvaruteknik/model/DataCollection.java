@@ -12,24 +12,99 @@ public class DataCollection
     private String xUnit;
     private String yUnit;
 
+    private String xSourceName;
+    private String xSourceLink;
+
+    private String ySourceLink;
+    private String ySourceName;
+
+    /**
+     * Set the name of the source of source x
+     * 
+     * @param xSourceName
+     *            The name or null
+     */
+    public void setXSourceName(String xSourceName)
+    {
+	this.xSourceName = xSourceName;
+    }
+
+    /**
+     * Get the name of the source of source x
+     * 
+     * @return The name or null
+     */
+    public String getXSourceName()
+    {
+	return xSourceName;
+    }
+
+    /**
+     * Set the link of the source of source x
+     * 
+     * @param xSourceLink
+     *            The link or null
+     */
+    public void setXSourceLink(String xSourceLink)
+    {
+	this.xSourceLink = xSourceLink;
+    }
+
+    /**
+     * Get the link of the source of source x
+     * 
+     * @return The link or null
+     */
+    public String getXSourceLink()
+    {
+	return xSourceLink;
+    }
+
+    /**
+     * Get the name of the source of source y
+     * 
+     * @return The name or null
+     */
+    public String getYSourceName()
+    {
+	return ySourceName;
+    }
+
+    /**
+     * Get the link of the source of source y
+     * 
+     * @return The link or null
+     */
+    public String getYSourceLink()
+    {
+	return ySourceLink;
+    }
+
     /**
      * Populates a collection of data
      * 
      * @param title
      *            The title for this collection
-     * @param xUnit
-     *            The unit name for the x values
-     * @param yUnit
-     *            The unit name for the y values
+     * @param sourceX
+     *            The data-source for the x values
+     * @param sourceY
+     *            The data-source for the y values
      * @param data
      *            The data to put in this collection
      */
-    public DataCollection(String title, String xUnit, String yUnit, Map<String, MatchedDataPair> data)
+    public DataCollection(String title, DataSource sourceX, DataSource sourceY, Map<String, MatchedDataPair> data)
     {
 	this.data = data;
 	this.title = title;
-	this.xUnit = xUnit;
-	this.yUnit = yUnit;
+
+	xUnit = sourceX.getUnit();
+	yUnit = sourceY.getUnit();
+
+	xSourceName = sourceX.getSourceName();
+	xSourceLink = sourceX.getSourceLink();
+
+	ySourceName = sourceY.getSourceName();
+	ySourceLink = sourceY.getSourceLink();
     }
 
     /**
@@ -75,6 +150,6 @@ public class DataCollection
     @Override
     public String toString()
     {
-	return "[DataCollectionBuilder: " + title + "]";
+	return "[DataCollection: " + title + "]";
     }
 }

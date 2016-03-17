@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import se.hig.programvaruteknik.data.SMHISourceBuilder.Period;
+import se.hig.programvaruteknik.model.CachedValue;
 import se.hig.programvaruteknik.model.DataCollectionBuilder;
 import se.hig.programvaruteknik.model.DataSource;
 import se.hig.programvaruteknik.model.MatchedDataPair;
@@ -31,15 +32,12 @@ public class FootballAndWeatherCombiner
     public FootballAndWeatherCombiner setArenaToLocationMapper(Map<String, SMHILocation> arenaToLocationMapper)
     {
 	this.arenaToLocationMapper = arenaToLocationMapper;
+	data.clearCache();
 	return this;
     }
 
-    /**
-     * Build that data
-     * 
-     * @return The built data
-     */
-    public Map<String, List<MatchedDataPair>> build()
+    @SuppressWarnings("unchecked")
+    private CachedValue<Map<String, List<MatchedDataPair>>> data = new CachedValue<>(() ->
     {
 	Map<String, List<MatchedDataPair>> result = new TreeMap<>();
 
@@ -61,10 +59,9 @@ public class FootballAndWeatherCombiner
 		weatherBuilder.setPeriod(Period.OLD);
 		weatherCache.put(mapping.getValue(), weatherBuilder.build());
 	    }
-
+	    
 	    footballBuilder.setEntryFilter((entry) ->
 	    {
-		@SuppressWarnings("unchecked")
 		Map<String, Object> arena = (Map<String, Object>) ((Map<String, Object>) entry.get("facts"))
 			.get("arena");
 
@@ -87,6 +84,16 @@ public class FootballAndWeatherCombiner
 	}
 
 	return Collections.unmodifiableMap(result);
+    });
+
+    /**
+     * Build that data
+     * 
+     * @return The built data
+     */
+    public Map<String, List<MatchedDataPair>> build()
+    {
+	return data.get();
     }
 
     /**

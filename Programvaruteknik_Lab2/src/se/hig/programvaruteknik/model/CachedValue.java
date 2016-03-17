@@ -3,7 +3,9 @@ package se.hig.programvaruteknik.model;
 import java.util.function.Supplier;
 
 /**
- * Container of a cached value
+ * Container of a cached value<br>
+ * <br>
+ * Observe that it returns the EXACT value that it caches, not a copy
  * 
  * @param <T>
  *            The type of the value to cache

@@ -14,6 +14,55 @@ import java.util.TreeMap;
  */
 public abstract class DataSourceBuilder
 {
+    private String sourceName = null;
+    private String sourceLink = null;
+
+    /**
+     * Set the name of the source
+     * 
+     * @param sourceName
+     *            The name
+     * @return This builder
+     */
+    public DataSourceBuilder setSourceName(String sourceName)
+    {
+	this.sourceName = sourceName;
+	return this;
+    }
+
+    /**
+     * Set the link of the source
+     * 
+     * @param sourceLink
+     *            The link
+     * @return This builder
+     */
+    public DataSourceBuilder setSourceLink(String sourceLink)
+    {
+	this.sourceLink = sourceLink;
+	return this;
+    }
+
+    /**
+     * Get the name of the source
+     * 
+     * @return The name of the source or null
+     */
+    public String getSourceName()
+    {
+	return sourceName;
+    }
+
+    /**
+     * Get the link of the source
+     * 
+     * @return The link of the source or null
+     */
+    public String getSourceLink()
+    {
+	return sourceLink;
+    }
+
     private BiFunction<LocalDate, Double, Boolean> dataFilter;
     private BiFunction<LocalDate, List<Double>, Double> dataReducer = REDUCER_SUM;
 
@@ -107,6 +156,9 @@ public abstract class DataSourceBuilder
 	    private String name = null;
 	    private String unit = null;
 
+	    private String sourceName = null;
+	    private String sourceLink = null;
+
 	    {
 		try
 		{
@@ -121,13 +173,16 @@ public abstract class DataSourceBuilder
 		    name = DataSourceBuilder.this.name.get();
 		    unit = DataSourceBuilder.this.unit.get();
 
+		    sourceName = getSourceName();
+		    sourceLink = getSourceLink();
+
 		    Map<LocalDate, Double> rawData = new TreeMap<>();
 		    for (Entry<LocalDate, List<Double>> entry : generatedData.entrySet())
 		    {
 			Double value = dataReducer.apply(entry.getKey(), entry.getValue());
 			if (dataFilter == null || !dataFilter.apply(entry.getKey(), value))
 			{
-			    rawData.put(entry.getKey(), value);
+			    System.out.println(rawData.put(entry.getKey(), value));
 			}
 		    }
 
@@ -150,6 +205,18 @@ public abstract class DataSourceBuilder
 	    public String getName()
 	    {
 		return name;
+	    }
+
+	    @Override
+	    public String getSourceName()
+	    {
+		return sourceName;
+	    }
+
+	    @Override
+	    public String getSourceLink()
+	    {
+		return sourceLink;
 	    }
 
 	    @Override

@@ -76,7 +76,6 @@ public class TestEverysportData
 	footballSource.setDataExtractor(FootballSourceBuilder.TOTAL_GOALS_EXTRACTOR);
 	footballSource.setEntryFilter((obj) ->
 	{
-	    System.out.println("!");
 	    return false;
 	});
 	DataSource dataSource = footballSource.build();
