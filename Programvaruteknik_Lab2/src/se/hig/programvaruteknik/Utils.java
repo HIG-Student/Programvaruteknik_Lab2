@@ -1,5 +1,9 @@
 package se.hig.programvaruteknik;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Clever utilities
  */
@@ -23,5 +27,33 @@ public class Utils
 	}
 
 	return null;
+    }
+
+    /**
+     * Read a stream
+     * 
+     * @param stream
+     *            The stream to read
+     * @return The string
+     * @throws Exception
+     *             on errors
+     */
+    public static String readStream(InputStream stream)
+    {
+	try (BufferedReader in = new BufferedReader(new InputStreamReader(stream)))
+	{
+	    StringBuilder builder = new StringBuilder();
+	    String inputLine;
+	    while ((inputLine = in.readLine()) != null)
+	    {
+		builder.append(inputLine);
+		builder.append("\n");
+	    }
+	    return builder.toString().trim();
+	}
+	catch (Exception e)
+	{
+	    throw new RuntimeException(e);
+	}
     }
 }
