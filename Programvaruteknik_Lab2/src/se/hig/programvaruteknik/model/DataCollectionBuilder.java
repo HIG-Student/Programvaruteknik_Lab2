@@ -26,7 +26,44 @@ public class DataCollectionBuilder
 	    () -> matchData(xData, xMergeType, yData, yMergeType, resolution));
 
     /**
-     * Creation of a builder that builds a {@link DataCollection}
+     * Creation of a builder that builds a {@link DataCollection}<br>
+     * <br>
+     * Requires:
+     * <ul>
+     * <li>{@link DataCollectionBuilder#setXDatasource(DataSource) X datasource}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setYDatasource(DataSource) Y datasource}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setResolution(Resolution) Resolution}
+     * </li>
+     * </ul>
+     * Optional:
+     * <ul>
+     * <li>{@link DataCollectionBuilder#setTitle(String) Title}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setXMergeType(MergeType) X mergetype}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setYMergeType(MergeType) Y mergetype}
+     * </li>
+     * </ul>
+     */
+    public DataCollectionBuilder()
+    {
+
+    }
+
+    /**
+     * Creation of a builder that builds a {@link DataCollection}<br>
+     * <br>
+     * Optional:
+     * <ul>
+     * <li>{@link DataCollectionBuilder#setTitle(String) Title}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setXMergeType(MergeType) X mergetype}
+     * </li>
+     * <li>{@link DataCollectionBuilder#setYMergeType(MergeType) Y mergetype}
+     * </li>
+     * </ul>
      * 
      * @param xData
      *            The x values
@@ -37,9 +74,37 @@ public class DataCollectionBuilder
      */
     public DataCollectionBuilder(DataSource xData, DataSource yData, Resolution resolution)
     {
+	setXDatasource(xData);
+	setYDatasource(yData);
+	setResolution(resolution);
+    }
+
+    /**
+     * Set the x datasource
+     * 
+     * @param xData
+     *            The datasource
+     * @return This builder (for chaining)
+     */
+    public DataCollectionBuilder setXDatasource(DataSource xData)
+    {
 	this.xData = xData;
+	resultingData.clearCache();
+	return this;
+    }
+
+    /**
+     * Set the y datasource
+     * 
+     * @param yData
+     *            The datasource
+     * @return This builder (for chaining)
+     */
+    public DataCollectionBuilder setYDatasource(DataSource yData)
+    {
 	this.yData = yData;
-	this.resolution = resolution;
+	resultingData.clearCache();
+	return this;
     }
 
     /**
@@ -47,7 +112,7 @@ public class DataCollectionBuilder
      * 
      * @param title
      *            The new title
-     * @return this builder (for chaining)
+     * @return This builder (for chaining)
      */
     public DataCollectionBuilder setTitle(String title)
     {
@@ -60,13 +125,12 @@ public class DataCollectionBuilder
      * 
      * @param resolution
      *            The new resolution
-     * @return this builder (for chaining)
+     * @return This builder (for chaining)
      */
     public DataCollectionBuilder setResolution(Resolution resolution)
     {
-	if (!this.resolution.equals(resolution)) resultingData.clearCache();
-
 	this.resolution = resolution;
+	resultingData.clearCache();
 	return this;
     }
 
@@ -85,13 +149,12 @@ public class DataCollectionBuilder
      * 
      * @param xMergeType
      *            The merge type
-     * @return this builder (for chaining)
+     * @return This builder (for chaining)
      */
     public DataCollectionBuilder setXMergeType(MergeType xMergeType)
     {
-	if (!this.xMergeType.equals(xMergeType)) resultingData.clearCache();
-
 	this.xMergeType = xMergeType;
+	resultingData.clearCache();
 	return this;
     }
 
@@ -100,13 +163,12 @@ public class DataCollectionBuilder
      * 
      * @param yMergeType
      *            The merge type
-     * @return this builder (for chaining)
+     * @return This builder (for chaining)
      */
     public DataCollectionBuilder setYMergeType(MergeType yMergeType)
     {
-	if (!this.yMergeType.equals(yMergeType)) resultingData.clearCache();
-
 	this.yMergeType = yMergeType;
+	resultingData.clearCache();
 	return this;
     }
 
