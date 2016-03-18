@@ -1,6 +1,12 @@
 package se.hig.programvaruteknik.model;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import com.owlike.genson.Genson;
+
+import se.hig.programvaruteknik.JSONFormatter;
 
 /**
  * A collection of data
@@ -153,5 +159,58 @@ public class DataCollection
     public String toString()
     {
 	return "[DataCollection: " + title + "]";
+    }
+
+    /**
+     * Returns a JSON representation of this collection
+     * 
+     * @return The JSON string
+     */
+    public String asJSON()
+    {
+	return asJSON(new JSONFormatter());
+    }
+
+    /**
+     * Returns a JSON representation of this collection
+     * 
+     * @param formatter
+     *            A formatter to format the JSON string with
+     * 
+     * @return The JSON string
+     */
+    @SuppressWarnings("serial")
+    public String asJSON(JSONFormatter formatter)
+    {
+	return formatter.format(new Genson().serialize(new TreeMap<String, Object>()
+	{
+	    {
+		put("data", new TreeMap<String, Object>()
+		{
+		    {
+			put("name", getTitle());
+			put("a_name", getXUnit());
+			put("a_source_name", getXSourceName());
+			put("a_source_link", getXSourceLink());
+			put("b_name", getYUnit());
+			put("b_source_name", getYSourceName());
+			put("b_source_link", getYSourceLink());
+			put("data", new TreeMap<String, Object>()
+			{
+			    {
+				for (Entry<String, MatchedDataPair> entry : getData().entrySet())
+				    put(entry.getKey(), new TreeMap<String, Object>()
+				    {
+					{
+					    put("a", entry.getValue().getXValue());
+					    put("b", entry.getValue().getYValue());
+					}
+				    });
+			    }
+			});
+		    }
+		});
+	    }
+	}));
     }
 }

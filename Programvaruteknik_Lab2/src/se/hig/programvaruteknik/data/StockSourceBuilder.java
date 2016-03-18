@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
+import se.hig.programvaruteknik.Utils;
+
 import static se.hig.programvaruteknik.Utils.*;
 
 /**
@@ -253,7 +255,7 @@ public class StockSourceBuilder extends CSVDataSourceBuilder
 	    HttpURLConnection login = (HttpURLConnection) new URL(String.format(URL, name, 1)).openConnection();
 	    login.setRequestMethod("GET");
 	    login.connect();
-	    return login.getResponseCode() == 200;
+	    return !"404 Symbol Not Found".equals(Utils.readStream(login.getInputStream()));
 	}
 	catch (IOException e)
 	{
