@@ -50,12 +50,14 @@ public class TestDataCollection
 		    }
 		});
 
-	System.out.println(collection.asJSON());
+	validateData(collection.asJSON());
+	validateData(collection.asJSON(null));
+    }
 
+    private void validateData(String JSON)
+    {
 	@SuppressWarnings("unchecked")
-	Map<String, Object> data = (Map<String, Object>) new Genson()
-		.deserialize(collection.asJSON(), Map.class)
-		.get("data");
+	Map<String, Object> data = (Map<String, Object>) new Genson().deserialize(JSON, Map.class).get("data");
 
 	assertEquals("[title]", data.get("name"));
 
@@ -78,6 +80,5 @@ public class TestDataCollection
 	assertEquals(2, pairs.get("date_2").size());
 	assertEquals(new Double(2), pairs.get("date_2").get("a"));
 	assertEquals(new Double(2), pairs.get("date_2").get("b"));
-
     }
 }

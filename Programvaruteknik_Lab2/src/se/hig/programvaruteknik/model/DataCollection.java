@@ -175,13 +175,23 @@ public class DataCollection
      * Returns a JSON representation of this collection
      * 
      * @param formatter
-     *            A formatter to format the JSON string with
+     *            A formatter to format the JSON string with<br>
+     *            If null, it is not formatted
      * 
      * @return The JSON string
      */
     @SuppressWarnings("serial")
     public String asJSON(JSONFormatter formatter)
     {
+	if (formatter == null) formatter = new JSONFormatter()
+	{
+	    @Override
+	    public String format(String JSON)
+	    {
+		return JSON;
+	    }
+	};
+
 	return formatter.format(new Genson().serialize(new TreeMap<String, Object>()
 	{
 	    {
