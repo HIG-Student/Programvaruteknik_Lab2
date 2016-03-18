@@ -280,7 +280,18 @@ public class StockSourceBuilder extends CSVDataSourceBuilder
     public StockSourceBuilder(StockInfo info)
     {
 	this();
+	setStockInfo(info);
+    }
 
+    /**
+     * Sets the data to get
+     * 
+     * @param info
+     *            The data to get from the stock
+     * @return This builder
+     */
+    public StockSourceBuilder setStockInfo(StockInfo info)
+    {
 	setName(info.getName());
 	setUnit(info.getUnit());
 
@@ -290,6 +301,7 @@ public class StockSourceBuilder extends CSVDataSourceBuilder
 	    String[] data = line.split(",");
 	    adder.accept(LocalDate.parse(data[0], DATE_FORMATTER), info.getExtractor().apply(data));
 	});
+	return this;
     }
 
     /**
